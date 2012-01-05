@@ -1,0 +1,12 @@
+## Interface: 40300
+## Title: Reaper
+## Author: Smashed
+## Notes: Reaper
+## Version: 4.3.0.0
+## SavedVariables: ReaperProfile
+## X-Curse-Packaged-Version: 4.3.0.0
+## X-Curse-Project-Name: Reaper
+## X-Curse-Project-ID: reaper
+## X-Curse-Repository-ID: wow/reaper/mainline
+Reaper.lua
+Reaper.xml
