@@ -2,7 +2,6 @@
 
 <Script file="Reaper.lua"/>
 
-
 <Frame name="Frame_Reaper" hidden="true">
 	<Scripts>
 		<OnLoad>
@@ -16,829 +15,858 @@
 
 <GameTooltip name="ReaperTooltip" inherits="GameTooltipTemplate">
    <Scripts>
-     <Onload>
-       self:SetOwner(Frame_Reaper, "ANCHOR_NONE");
-     </Onload>
+	 <Onload>
+	   self:SetOwner(Frame_Reaper, "ANCHOR_NONE");
+	 </Onload>
    </Scripts>
 </GameTooltip>
 
-
-
 <!-- Minimap button -->
-	<Button name="ReaperMinimapButton" movable="true" parent="Minimap" toplevel="true" frameStata="MEDIUM"  hidden="false">
+<Button name="ReaperMinimapButton" movable="true" parent="Minimap" toplevel="true" frameStata="MEDIUM"  hidden="false">
+	<Size>
+		<AbsDimension x="34" y="34"/>
+	</Size>
+	<Anchors>
+		<Anchor point="CENTER" relativeTo="MinimapBackdrop" relativePoint="BOTTOM">
+		</Anchor>
+	</Anchors>
+	<Layers>
+		<Layer level="ARTWORK">
+			<Texture file="Interface\AddOns\Reaper\ReaperButtonUp">
+				<Size>
+					<AbsDimension x="17" y="17"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="7" y="-6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+		</Layer>
+		<Layer level="OVERLAY">
+			<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+				<Size>
+					<AbsDimension x="52" y="52"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+			</Texture>
+		</Layer>
+	</Layers>
+	<Scripts>
+		<OnMouseDown>
+			if(IsModifierKeyDown()) then self:StartMoving(); end
+		</OnMouseDown>
+
+		<OnMouseUp>
+			self:StopMovingOrSizing();
+		</OnMouseUp>
+
+		<OnClick>
+			if (Reaper_Options_DisplayFrame:IsShown()) then
+				Reaper_Options_DisplayFrame:Hide();
+			else
+				Reaper_Options_DisplayFrame:Show();
+			end
+		</OnClick>
+
+		<OnLoad>
+			self.tooltipText = "Reaper"..Reaper_Version.." Click for Options |r|n(Shift Right Click/Drag to Move this Button)";
+			self:RegisterForClicks("LeftButtonUp");
+		</OnLoad>
+
+		<OnEnter>
+			GameTooltip:SetOwner(self, "ANCHOR_LEFT");
+			GameTooltip:SetText(self.tooltipText);
+		</OnEnter>
+
+		<OnLeave>
+			GameTooltip:Hide();
+		</OnLeave>
+
+	</Scripts>
+	<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+</Button>
+
+
+<Button name="Reaper_ButtonTemplate" enableMouse="true" virtual="true">
+	<Size>
+		<AbsDimension x="300" y="16"/>
+	</Size>
+
+	<NormalTexture file="Interface\Buttons\UI-PlusButton-UP">
 		<Size>
-			<AbsDimension x="34" y="34"/>
+			<AbsDimension x="16" y="16"/>
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" relativeTo="MinimapBackdrop" relativePoint="BOTTOM">
-			</Anchor>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture file="Interface\AddOns\Reaper\ReaperButtonUp">
-					<Size>
-						<AbsDimension x="17" y="17"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="7" y="-6"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="OVERLAY">
-				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
-					<Size>
-						<AbsDimension x="52" y="52"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT"/>
-					</Anchors>
-				</Texture>
-			</Layer>
-		</Layers>
-		<Scripts>
-
-			<OnMouseDown>
-				if(IsModifierKeyDown()) then self:StartMoving(); end
-			</OnMouseDown>
-
-
-			<OnMouseUp>
-				self:StopMovingOrSizing();
-			</OnMouseUp>
-
-
-			<OnClick>
-                if (Reaper_Options_DisplayFrame:IsShown()) then
-                    Reaper_Options_DisplayFrame:Hide();
-                else
-                    Reaper_Options_DisplayFrame:Show();
-                end
-			</OnClick>
-
-			<OnLoad>
-				self.tooltipText = "Reaper"..Reaper_Version.." Click for Options |r|n(Shift Right Click/Drag to Move this Button)";
-				self:RegisterForClicks("LeftButtonUp");
-			</OnLoad>
-
-			<OnEnter>
-				GameTooltip:SetOwner(self, "ANCHOR_LEFT");
-				GameTooltip:SetText(self.tooltipText);
-			</OnEnter>
-
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
-
-		</Scripts>
-		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
-	</Button>
-
-
-
-
-	<Button name="Reaper_ButtonTemplate" enableMouse="true" virtual="true">
-		<Size>
-			<AbsDimension x="300" y="16"/>
-		</Size>
-
-		<NormalTexture file="Interface\Buttons\UI-PlusButton-UP">
-			<Size>
-				<AbsDimension x="16" y="16"/>
-			</Size>
-			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="23" y="0"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</NormalTexture>
-
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parentHighlight" hidden="true">
-					<Size>
-						<AbsDimension x="290" y="16"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="25" y="0"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="RIGHT">
-							<Offset>
-								<AbsDimension x="18" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<Color r="0.6" g="0.6" b="0.6" a="0.4"/>
-				</Texture>
-			</Layer>
-		</Layers>
-
-		<ButtonText name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
-			<Size>
-				<AbsDimension x="275" y="12"/>
-			</Size>
-			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="40" y="0"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</ButtonText>
-
-		<Scripts>
-			<OnEnter>
-
-			</OnEnter>
-			<OnLeave>
-
-			</OnLeave>
-			<OnClick>
-
-			</OnClick>
-		</Scripts>
-		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
-	</Button>
-
-
-	<Frame name="Reaper_Options_DisplayFrame" toplevel="true" enableMouse="true" movable="true" parent="UIParent" hidden="true">
-		<Size>
-			<AbsDimension x="384" y="512"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT">
+			<Anchor point="LEFT">
 				<Offset>
-					<AbsDimension x="0" y="-104"/>
+					<AbsDimension x="23" y="0"/>
 				</Offset>
 			</Anchor>
 		</Anchors>
+	</NormalTexture>
 
-		<HitRectInsets>
-			<AbsInset left="0" right="35" top="0" bottom="75"/>
-		</HitRectInsets>
-
-
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\Reaper\ReaperButtonUp">
-					<Size>
-						<AbsDimension x="58" y="58"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="10" y="-8"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-			</Layer>
-
-			<Layer level="ARTWORK">
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT"/>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopRight">
-					<Size>
-						<AbsDimension x="128" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="256" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="0" y="-256"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotRight">
-					<Size>
-						<AbsDimension x="128" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="256" y="-256"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\AddOns\Reaper\ReaperBkg">
-					<Size>
-						<AbsDimension x="319" y="352"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-							<Offset>
-								<AbsDimension x="22" y="-75"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-
-			</Layer>
-		</Layers>
-
-		<Frames>
-			<Button name="Reaper_Options_DisplayFrame_TitleButton" enableMouse="true">
+	<Layers>
+		<Layer level="BACKGROUND">
+			<Texture name="$parentHighlight" hidden="true">
 				<Size>
-					<AbsDimension x="250" y="14"/>
+					<AbsDimension x="290" y="16"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOP" relativeTo="Reaper_Options_DisplayFrame" relativePoint="TOP">
-						<Offset>
-							<AbsDimension x="3" y="-17"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="Reaper_Options_DisplayFrame_TitleText" JustifyH="CENTER" inherits="GameFontHighlight"/>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnMouseDown>
-						Reaper_Options_DisplayFrame:StartMoving();
-					</OnMouseDown>
-					<OnMouseUp>
-						Reaper_Options_DisplayFrame:StopMovingOrSizing();
-					</OnMouseUp>
-				</Scripts>
-			</Button>
-
-
-			<Button name="Reaper_Options_DisplayFrame_CloseButton" inherits="UIPanelCloseButton">
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="Reaper_Options_DisplayFrame" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="-29" y="-8"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-
-            <Button name="$parentSpellLinks" text="Spell Links">
-            <Size>
-              <AbsDimension x="80" y="21" />
-            </Size>
-            <Anchors>
-              <Anchor point="TOPLEFT">
-                <Offset>
-                  <AbsDimension x="250" y="-34" />
-                </Offset>
-              </Anchor>
-            </Anchors>
-            <Scripts>
-              <OnClick>
-                Reaper_Populate_SpellListFrame();
-                Reaper_SpellListFrame:Show();
-              </OnClick>
-            </Scripts>
-            <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
-              <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
-            </NormalTexture>
-            <PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
-              <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
-            </PushedTexture>
-            <DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
-              <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
-            </DisabledTexture>
-            <HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
-              <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
-            </HighlightTexture>
-            <ButtonText name="$parentText">
-              <FontHeight>
-                <AbsValue val="10" />
-              </FontHeight>
-            </ButtonText>
-            <NormalFont style="GameFontNormal" />
-            <HighlightFont style="GameFontHighlight" />
-            <DisabledFont style="GameFontDisable" />
-          </Button>
-
-			<CheckButton name="$parent_Ding" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
-							<AbsDimension x="20" y="170"></AbsDimension>
+							<AbsDimension x="25" y="0"/>
 						</Offset>
 					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight"/>
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_DingText:SetText("Announce Dings to Guild Chat");
-                    </OnLoad>
-					<OnClick>
-                        rpdb.Ding=Reaper_Options_DisplayFrame_Ding:GetChecked();
-                        if(rpdb.Ding==1) then
-                            RInform("Ding Guild Announce now turned on");
-                        else
-                            RInform("Ding Guild Announce now turned off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
-
-			<CheckButton name="$parent_PxP" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
-					<Anchor point="LEFT">
+					<Anchor point="RIGHT">
 						<Offset>
-							<AbsDimension x="20" y="150"></AbsDimension>
+							<AbsDimension x="18" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight"/>
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_PxPText:SetText("Announce XP Gains to Party Chat");
-                    </OnLoad>
-					<OnClick>
-						rpdb.PxP=Reaper_Options_DisplayFrame_PxP:GetChecked();
-                        if(rpdb.PxP==1) then
-                            RInform("Announce XP Gains to Party Chat now turned on");
-                        else
-                            RInform("Announce XP Gains to Party Chat now turned off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
+				<Color r="0.6" g="0.6" b="0.6" a="0.4"/>
+			</Texture>
+		</Layer>
+	</Layers>
 
-			<CheckButton name="$parent_CheckGuildMOTD" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="20" y="130"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_CheckGuildMOTDText:SetText("Do not show Guild MOTD in a box");
-                    </OnLoad>
-					<OnClick>
-                        rpdb.GuildMOTD=self:GetChecked();
-                        if(rpdb.GuildMOTD) then
-                            RPrint("Guild MOTD on");
-                        else
-                            RPrint("Guild MOTD off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
-
-			<CheckButton name="$parent_CheckGuildMOTDGuildChat" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="20" y="110"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_CheckGuildMOTDGuildChatText:SetText("Do not send guild MOTD guild chat during login");
-                    </OnLoad>
-					<OnClick>
-                        rpdb.GuildMOTDGuildChat=self:GetChecked();
-                        if(rpdb.GuildMOTDGuildChat) then
-                            RPrint("Guild MOTD in guild chat on");
-                        else
-                            RPrint("Guild MOTD in guild chat off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
-
-
-			<CheckButton name="$parent_CheckWarnQuestItemsBank" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="20" y="90"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_CheckWarnQuestItemsBankText:SetText("Warning if quest items are in bank");
-                    </OnLoad>
-					<OnClick>
-                        rpdb.QuestBankWarn=self:GetChecked();
-                        if(rpdb.QuestBankWarn) then
-                            RPrint("Warn if quest items are in bank on");
-                        else
-                            RPrint("Warn if quest items are in bank off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
-
-			<CheckButton name="$parent_AutoFollow" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="20" y="70"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_AutoFollowText:SetText("Autofollow when follow typed in party chat");
-                    </OnLoad>
-					<OnClick>
-                        rpdb.AutoFollow=Reaper_Options_DisplayFrame_AutoFollow:GetChecked();
-                        if(rpdb.AutoFollow==1) then
-                            RInform("Auto follow now turned on");
-                        else
-                            RInform("Auto follow now turned off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
-
-			<CheckButton name="$parent_Mature" inherits="OptionsCheckButtonTemplate" checked="true">
-				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="20" y="50"></AbsDimension>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
-					</Layer>
-				</Layers>
-				<Scripts>
-                    <OnLoad>
-                        Reaper_Options_DisplayFrame_MatureText:SetText("Automatically turn off mature language filter");
-                    </OnLoad>
-					<OnClick>
-                        rpdb.Mature=Reaper_Options_DisplayFrame_Mature:GetChecked();
-                        if(rpdb.Mature==1) then
-                            RInform("Auto mature language filter off now turned on");
-                        else
-                            RInform("Auto mature language filter off now turned off");
-                        end
-					</OnClick>
-				</Scripts>
-			</CheckButton>
-
-		</Frames>
-		<Scripts>
-			<OnMouseDown>
-
-			</OnMouseDown>
-			<OnMouseUp>
-
-			</OnMouseUp>
-		</Scripts>
-	</Frame>
-
-	<Button name="Reaper_SpellListFrameSF_ItemButtonTemplate" enableMouse="true" virtual="true">
+	<ButtonText name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
 		<Size>
-			<AbsDimension x="300" y="16"/>
-		</Size>
-
-
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parentHighlight" hidden="true">
-					<Size>
-						<AbsDimension x="290" y="16"/>
-					</Size>
-					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="25" y="0"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="RIGHT">
-							<Offset>
-								<AbsDimension x="18" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<Color r="0.6" g="0.6" b="0.6" a="0.4"/>
-				</Texture>
-			</Layer>
-		</Layers>
-
-		<ButtonText name="$parentTxtId" inherits="GameFontNormal" justifyH="LEFT">
-            <Size>
-				<AbsDimension x="75" y="12"/>
-			</Size>
-			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="5" y="0"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</ButtonText>
-
-		<ButtonText name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
-			<Size>
-				<AbsDimension x="275" y="12"/>
-			</Size>
-			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="50" y="0"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</ButtonText>
-
-		<Scripts>
-			<OnEnter>
-
-			</OnEnter>
-			<OnLeave>
-
-			</OnLeave>
-			<OnClick>
-
-			</OnClick>
-		</Scripts>
-	</Button>
-
-
-	<Frame name="Reaper_SpellListFrame" toplevel="true" enableMouse="true" movable="true" parent="UIParent" hidden="true">
-
-		<Size>
-			<AbsDimension x="384" y="512"/>
+			<AbsDimension x="275" y="12"/>
 		</Size>
 		<Anchors>
-			<Anchor point="TOPLEFT">
+			<Anchor point="LEFT">
 				<Offset>
-					<AbsDimension x="0" y="-104"/>
+					<AbsDimension x="40" y="0"/>
 				</Offset>
 			</Anchor>
 		</Anchors>
+	</ButtonText>
 
-		<HitRectInsets>
-			<AbsInset left="0" right="35" top="0" bottom="75"/>
-		</HitRectInsets>
+	<Scripts>
+		<OnEnter>
 
+		</OnEnter>
+		<OnLeave>
 
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\Reaper\ReaperButtonASL">
-					<Size>
-						<AbsDimension x="58" y="58"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="10" y="-8"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="ARTWORK">
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT"/>
-					</Anchors>
-				</Texture>
+		</OnLeave>
+		<OnClick>
 
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopRight">
-					<Size>
-						<AbsDimension x="128" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="256" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotLeft">
-					<Size>
-						<AbsDimension x="256" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="0" y="-256"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotRight">
-					<Size>
-						<AbsDimension x="128" y="256"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="256" y="-256"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-
-				<Texture file="Interface\AddOns\Reaper\ReaperBkg">
-					<Size>
-						<AbsDimension x="319" y="352"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-							<Offset>
-								<AbsDimension x="22" y="-75"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
+		</OnClick>
+	</Scripts>
+	<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+</Button>
 
 
-			</Layer>
-		</Layers>
-
-		<Frames>
+	
 
 
 
+	
 
 
+<Frame name="Reaper_Options_DisplayFrame" toplevel="true" enableMouse="true" movable="true" parent="UIParent" hidden="true">
+	<Size>
+		<AbsDimension x="384" y="512"/>
+	</Size>
+	<Anchors>
+		<Anchor point="TOPLEFT">
+			<Offset>
+				<AbsDimension x="0" y="-104"/>
+			</Offset>
+		</Anchor>
+	</Anchors>
 
-			<ScrollFrame name="Reaper_SpellListFrameSF" inherits="FauxScrollFrameTemplate">
+	<HitRectInsets>
+		<AbsInset left="0" right="35" top="0" bottom="75"/>
+	</HitRectInsets>
+
+
+	<Layers>
+		<Layer level="BACKGROUND">
+			<Texture file="Interface\AddOns\Reaper\ReaperButtonUp">
 				<Size>
-					<AbsDimension x="298" y="353"/>
+					<AbsDimension x="58" y="58"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="Reaper_SpellListFrame">
+					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="19" y="-75"/>
+							<AbsDimension x="10" y="-8"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
+			</Texture>
 
+		</Layer>
+
+		<Layer level="ARTWORK">
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopLeft">
+				<Size>
+					<AbsDimension x="256" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+			</Texture>
+
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopRight">
+				<Size>
+					<AbsDimension x="128" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="256" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotLeft">
+				<Size>
+					<AbsDimension x="256" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-256"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotRight">
+				<Size>
+					<AbsDimension x="128" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="256" y="-256"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+
+			<Texture file="Interface\AddOns\Reaper\ReaperBkg">
+				<Size>
+					<AbsDimension x="319" y="352"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="22" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+
+
+		</Layer>
+	</Layers>
+
+	<Frames>
+		<Button name="Reaper_Options_DisplayFrame_TitleButton" enableMouse="true">
+			<Size>
+				<AbsDimension x="250" y="14"/>
+			</Size>
+			<Anchors>
+				<Anchor point="TOP" relativeTo="Reaper_Options_DisplayFrame" relativePoint="TOP">
+					<Offset>
+						<AbsDimension x="3" y="-17"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
 			<Layers>
-				<Layer level="ARTWORK">
-					<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-						<Size>
-							<AbsDimension x="31" y="256"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="5"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
-					</Texture>
-					<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-						<Size>
-							<AbsDimension x="31" y="106"/>
-						</Size>
-						<Anchors>
-							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="-2"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
-					</Texture>
+				<Layer level="OVERLAY">
+					<FontString name="Reaper_Options_DisplayFrame_TitleText" JustifyH="CENTER" inherits="GameFontHighlight"/>
 				</Layer>
 			</Layers>
-
-
-
 			<Scripts>
-				<OnVerticalScroll>
-                    FauxScrollFrame_OnVerticalScroll(self, offset, 16,  Reaper_Populate_SpellListFrame);
-
-				</OnVerticalScroll>
+				<OnMouseDown>
+					Reaper_Options_DisplayFrame:StartMoving();
+				</OnMouseDown>
+				<OnMouseUp>
+					Reaper_Options_DisplayFrame:StopMovingOrSizing();
+				</OnMouseUp>
 			</Scripts>
-		</ScrollFrame>
-
-			<Button name="Reaper_SpellListFrameSF_ItemButton1" inherits="Reaper_SpellListFrameSF_ItemButtonTemplate" id="1" hidden="true">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="Reaper_SpellListFrameSF">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
+		</Button>
 
 
-			<Button name="Reaper_SpellListFrame_TitleButton" enableMouse="true">
+		<Button name="Reaper_Options_DisplayFrame_CloseButton" inherits="UIPanelCloseButton">
+			<Anchors>
+				<Anchor point="TOPRIGHT" relativeTo="Reaper_Options_DisplayFrame" relativePoint="TOPRIGHT">
+					<Offset>
+						<AbsDimension x="-29" y="-8"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</Button>
+
+		<Button name="$parentSpellLinks" text="Spell Links">
+		<Size>
+		  <AbsDimension x="80" y="21" />
+		</Size>
+		<Anchors>
+		  <Anchor point="TOPLEFT">
+			<Offset>
+			  <AbsDimension x="250" y="-34" />
+			</Offset>
+		  </Anchor>
+		</Anchors>
+		<Scripts>
+		  <OnClick>
+			Reaper_Populate_SpellListFrame();
+			Reaper_SpellListFrame:Show();
+		  </OnClick>
+		</Scripts>
+		<NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+		  <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</NormalTexture>
+		<PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+		  <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</PushedTexture>
+		<DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+		  <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</DisabledTexture>
+		<HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+		  <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+		</HighlightTexture>
+		<ButtonText name="$parentText">
+		  <FontHeight>
+			<AbsValue val="10" />
+		  </FontHeight>
+		</ButtonText>
+		<NormalFont style="GameFontNormal" />
+		<HighlightFont style="GameFontHighlight" />
+		<DisabledFont style="GameFontDisable" />
+	  </Button>
+
+		<CheckButton name="$parent_Ding" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="170"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight"/>
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_DingText:SetText("Announce Dings to Guild Chat");
+				</OnLoad>
+				<OnClick>
+					rpdb.Ding=Reaper_Options_DisplayFrame_Ding:GetChecked();
+					if(rpdb.Ding==1) then
+						RInform("Ding Guild Announce now turned on");
+					else
+						RInform("Ding Guild Announce now turned off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="$parent_PxP" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="150"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight"/>
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_PxPText:SetText("Announce XP Gains to Party Chat");
+				</OnLoad>
+				<OnClick>
+					rpdb.PxP=Reaper_Options_DisplayFrame_PxP:GetChecked();
+					if(rpdb.PxP==1) then
+						RInform("Announce XP Gains to Party Chat now turned on");
+					else
+						RInform("Announce XP Gains to Party Chat now turned off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="$parent_CheckGuildMOTD" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="130"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_CheckGuildMOTDText:SetText("Do not show Guild MOTD in a box");
+				</OnLoad>
+				<OnClick>
+					rpdb.GuildMOTD=self:GetChecked();
+					if(rpdb.GuildMOTD) then
+						RInform("Guild MOTD on");
+					else
+						RInform("Guild MOTD off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="$parent_CheckGuildMOTDGuildChat" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="110"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_CheckGuildMOTDGuildChatText:SetText("Do not send guild MOTD guild chat during login");
+				</OnLoad>
+				<OnClick>
+					rpdb.GuildMOTDGuildChat=self:GetChecked();
+					if(rpdb.GuildMOTDGuildChat) then
+						RInform("Guild MOTD in guild chat on");
+					else
+						RInform("Guild MOTD in guild chat off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+
+		<CheckButton name="$parent_CheckToggleMinimapIcon" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="90"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_CheckToggleMinimapIconText:SetText("Minimap icon");
+				</OnLoad>
+				<OnClick>
+					rpdb.MinimapIcon=self:GetChecked();
+					if(rpdb.MinimapIcon) then
+						RInform("Reaper Minimap Icon shown");
+						ReaperMinimapButton:Show();
+					else
+						RInform("Reaper Minimap Icon hidden");
+						ReaperMinimapButton:Hide();
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="$parent_AutoFollow" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="70"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_AutoFollowText:SetText("Autofollow when follow typed in party chat");
+				</OnLoad>
+				<OnClick>
+					rpdb.AutoFollow=Reaper_Options_DisplayFrame_AutoFollow:GetChecked();
+					if(rpdb.AutoFollow==1) then
+						RInform("Auto follow now turned on");
+					else
+						RInform("Auto follow now turned off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+		<CheckButton name="$parent_Mature" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="50"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_MatureText:SetText("Automatically turn off mature language filter");
+				</OnLoad>
+				<OnClick>
+					rpdb.Mature=Reaper_Options_DisplayFrame_Mature:GetChecked();
+					if(rpdb.Mature==1) then
+						RInform("Auto mature language filter off now turned on");
+					else
+						RInform("Auto mature language filter off now turned off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+		
+		<CheckButton name="$parent_Debug" inherits="OptionsCheckButtonTemplate" checked="true">
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="20" y="30"></AbsDimension>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="$parentText" JustifyH="CENTER" inherits="GameFontHighlight" />
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnLoad>
+					Reaper_Options_DisplayFrame_DebugText:SetText("Debug mode");
+				</OnLoad>
+				<OnClick>
+					rpdb.Debug=self:GetChecked();
+					if(rpdb.Debug) then
+						RInform("Reaper DEBUG mode on");
+					else
+						RInform("Reaper DEBUG mode off");
+					end
+				</OnClick>
+			</Scripts>
+		</CheckButton>
+
+	</Frames>
+	<Scripts>
+		<OnMouseDown>
+
+		</OnMouseDown>
+		<OnMouseUp>
+
+		</OnMouseUp>
+	</Scripts>
+</Frame>
+
+<Button name="Reaper_SpellListFrameSF_ItemButtonTemplate" enableMouse="true" virtual="true">
+	<Size>
+		<AbsDimension x="300" y="16"/>
+	</Size>
+
+
+	<Layers>
+		<Layer level="BACKGROUND">
+			<Texture name="$parentHighlight" hidden="true">
 				<Size>
-					<AbsDimension x="250" y="14"/>
+					<AbsDimension x="290" y="16"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOP" relativeTo="Reaper_SpellListFrame" relativePoint="TOP">
+					<Anchor point="LEFT">
 						<Offset>
-							<AbsDimension x="3" y="-17"/>
+							<AbsDimension x="25" y="0"/>
+						</Offset>
+					</Anchor>
+					<Anchor point="RIGHT">
+						<Offset>
+							<AbsDimension x="18" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="Reaper_SpellListFrame_TitleText" JustifyH="CENTER" inherits="GameFontHighlight"/>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnMouseDown>
-						Reaper_SpellListFrame:StartMoving();
-					</OnMouseDown>
-					<OnMouseUp>
-						Reaper_SpellListFrame:StopMovingOrSizing();
-					</OnMouseUp>
-				</Scripts>
-			</Button>
+				<Color r="0.6" g="0.6" b="0.6" a="0.4"/>
+			</Texture>
+		</Layer>
+	</Layers>
+
+	<ButtonText name="$parentTxtId" inherits="GameFontNormal" justifyH="LEFT">
+		<Size>
+			<AbsDimension x="75" y="12"/>
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT">
+				<Offset>
+					<AbsDimension x="5" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</ButtonText>
+
+	<ButtonText name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
+		<Size>
+			<AbsDimension x="275" y="12"/>
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT">
+				<Offset>
+					<AbsDimension x="50" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</ButtonText>
+
+	<Scripts>
+		<OnEnter>
+
+		</OnEnter>
+		<OnLeave>
+
+		</OnLeave>
+		<OnClick>
+
+		</OnClick>
+	</Scripts>
+</Button>
 
 
-			<Button name="Reaper_SpellListFrame_CloseButton" inherits="UIPanelCloseButton">
+<Frame name="Reaper_SpellListFrame" toplevel="true" enableMouse="true" movable="true" parent="UIParent" hidden="true">
+
+	<Size>
+		<AbsDimension x="384" y="512"/>
+	</Size>
+	<Anchors>
+		<Anchor point="TOPLEFT">
+			<Offset>
+				<AbsDimension x="0" y="-104"/>
+			</Offset>
+		</Anchor>
+	</Anchors>
+
+	<HitRectInsets>
+		<AbsInset left="0" right="35" top="0" bottom="75"/>
+	</HitRectInsets>
+
+
+	<Layers>
+		<Layer level="BACKGROUND">
+			<Texture file="Interface\AddOns\Reaper\ReaperButtonASL">
+				<Size>
+					<AbsDimension x="58" y="58"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="Reaper_SpellListFrame" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="-29" y="-8"/>
+							<AbsDimension x="10" y="-8"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						Reaper_SpellListFrame:Hide();
-					</OnClick>
-				</Scripts>
-			</Button>
+			</Texture>
+		</Layer>
+		<Layer level="ARTWORK">
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopLeft">
+				<Size>
+					<AbsDimension x="256" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+			</Texture>
 
-		</Frames>
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-TopRight">
+				<Size>
+					<AbsDimension x="128" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="256" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
 
-	</Frame>
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotLeft">
+				<Size>
+					<AbsDimension x="256" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-256"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
 
+			<Texture file="Interface\TaxiFrame\UI-TaxiFrame-BotRight">
+				<Size>
+					<AbsDimension x="128" y="256"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="256" y="-256"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+
+			<Texture file="Interface\AddOns\Reaper\ReaperBkg">
+				<Size>
+					<AbsDimension x="319" y="352"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="22" y="-75"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Texture>
+
+
+		</Layer>
+	</Layers>
+
+	<Frames>
+
+
+
+
+
+
+		<ScrollFrame name="Reaper_SpellListFrameSF" inherits="FauxScrollFrameTemplate">
+			<Size>
+				<AbsDimension x="298" y="353"/>
+			</Size>
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="Reaper_SpellListFrame">
+					<Offset>
+						<AbsDimension x="19" y="-75"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+					<Size>
+						<AbsDimension x="31" y="256"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="-2" y="5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+				</Texture>
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+					<Size>
+						<AbsDimension x="31" y="106"/>
+					</Size>
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-2" y="-2"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
+				</Texture>
+			</Layer>
+		</Layers>
+
+
+
+		<Scripts>
+			<OnVerticalScroll>
+				FauxScrollFrame_OnVerticalScroll(self, offset, 16,  Reaper_Populate_SpellListFrame);
+
+			</OnVerticalScroll>
+		</Scripts>
+	</ScrollFrame>
+
+		<Button name="Reaper_SpellListFrameSF_ItemButton1" inherits="Reaper_SpellListFrameSF_ItemButtonTemplate" id="1" hidden="true">
+			<Anchors>
+				<Anchor point="TOPLEFT" relativeTo="Reaper_SpellListFrameSF">
+					<Offset>
+						<AbsDimension x="0" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</Button>
+
+
+		<Button name="Reaper_SpellListFrame_TitleButton" enableMouse="true">
+			<Size>
+				<AbsDimension x="250" y="14"/>
+			</Size>
+			<Anchors>
+				<Anchor point="TOP" relativeTo="Reaper_SpellListFrame" relativePoint="TOP">
+					<Offset>
+						<AbsDimension x="3" y="-17"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Layers>
+				<Layer level="OVERLAY">
+					<FontString name="Reaper_SpellListFrame_TitleText" JustifyH="CENTER" inherits="GameFontHighlight"/>
+				</Layer>
+			</Layers>
+			<Scripts>
+				<OnMouseDown>
+					Reaper_SpellListFrame:StartMoving();
+				</OnMouseDown>
+				<OnMouseUp>
+					Reaper_SpellListFrame:StopMovingOrSizing();
+				</OnMouseUp>
+			</Scripts>
+		</Button>
+
+
+		<Button name="Reaper_SpellListFrame_CloseButton" inherits="UIPanelCloseButton">
+			<Anchors>
+				<Anchor point="TOPRIGHT" relativeTo="Reaper_SpellListFrame" relativePoint="TOPRIGHT">
+					<Offset>
+						<AbsDimension x="-29" y="-8"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+			<Scripts>
+				<OnClick>
+					Reaper_SpellListFrame:Hide();
+				</OnClick>
+			</Scripts>
+		</Button>
+
+	</Frames>
+
+</Frame>
 
 
 
