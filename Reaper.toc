@@ -5,6 +5,4 @@
 ## SavedVariables: ReaperProfile
 ## Dependencies: smashed-library
 Reaper.xml
-
-
-## Version: 6.0.3.10
+## Version: 6.0.3.11

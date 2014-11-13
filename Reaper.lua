@@ -2,7 +2,7 @@
 Filename: Reaper.lua
 Author  : Smashed - Bladefist
 ]]--
-RP_NUM_SPELLS=99999;
+RP_NUM_SPELLS=999;
 RFCC="|cffff2020"; WFCC="|cffffffff"; NFCC="|cffffd200"; DFCC="|cff888888"; GFCC="|cff00ff00"; BFCC="|cff0000ff"; YFCC="|cffffff00"; OFCC="|cffff9900";
 ------------------------------------------------------------------------
 function rp_Round(what, precision) return math.floor(what*math.pow(10,precision)+0.5) / math.pow(10,precision) end
