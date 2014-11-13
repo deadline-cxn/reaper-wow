@@ -1,10 +1,10 @@
-## Interface: 50200
+## Interface: 60000
 ## Title: Reaper
-## Author: Smashed
+## Author: Smashed aka Dagum aka Deadline
 ## Notes: Reaper
-## Version: 5.2.0
 ## SavedVariables: ReaperProfile
-Smashed\Smashed.Lib.xml
+## Dependencies: smashed-library
 Reaper.xml
 
 
+## Version: 6.0.3.9
