@@ -262,12 +262,12 @@ function Reaper_OnEvent(self,event,...)
   if(event=="UNIT_INVENTORY_CHANGED") then end
   ------------------------------------------------------------------------
   if(event=="CHAT_MSG_SYSTEM") then
-	if(string.find(argz[0],string.gsub(INSTANCE_RESET_SUCCESS,"%%s",""))) then
+	if(string.find(narg[0],string.gsub(INSTANCE_RESET_SUCCESS,"%%s",""))) then
 	  if(UnitInRaid("player")) then
-		rp_RC(argz[0])
+		rp_RC(narg[0])
 	  else
 		if(UnitInParty("player")) then
-		  rp_PC(argz[0])
+		  rp_PC(narg[0])
 		end
 	  end
 	end
@@ -330,7 +330,7 @@ function Reaper_OnEvent(self,event,...)
   ------------------------------------------------------------------------
   if(event=="PLAYER_LEVEL_UP") then
 	if(rpdb.Ding==nil) then rpdb.Ding=0 end
-	if(rpdb.Ding==1) then msg="Ding! Level "..argz[0] rp_GC(msg) end
+	if(rpdb.Ding==1) then msg="Ding! Level "..narg[0] rp_GC(msg) end
   end
   ------------------------------------------------------------------------
   if(event=="UNIT_TARGET") then end
@@ -339,7 +339,7 @@ function Reaper_OnEvent(self,event,...)
 	where="WHISPER"
 	if(narg[0]=="follow") then
 	  if(rpdb.AutoFollow==1) then
-		FollowUnit(argz[1])
+		FollowUnit(narg[1])
 		--local canfollow=CheckInteractDistance(arg2,4)
 		--[[
 
