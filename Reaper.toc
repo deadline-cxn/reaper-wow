@@ -1,8 +1,9 @@
-## Interface: 60000
+## Interface: 70000
 ## Title: Reaper
+## Version: 7.0.0.1
 ## Author: Smashed aka Dagum aka Deadline
 ## Notes: Reaper
+## email: defectiveseth@gmail.com
 ## SavedVariables: ReaperProfile
 ## Dependencies: smashed-library
 Reaper.xml
-## Version: 6.0.3.17

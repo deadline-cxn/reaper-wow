@@ -2,7 +2,7 @@
 Filename: Reaper.lua
 Author  : Smashed - Bladefist
 ]]--
-RP_NUM_SPELLS=999
+RP_NUM_SPELLS=399999
 ------------------------------------------------------------------------
 function rp_GetGameTime() local hour,minute=GetGameTime() return hour..":"..minute end
 ------------------------------------------------------------------------
@@ -282,7 +282,8 @@ function Reaper_OnEvent(self,event,...)
 	]]
   end
   ------------------------------------------------------------------------
-  if(event=="CHAT_MSG_COMBAT_FACTION_CHANGE") then end
+  if(event=="CHAT_MSG_COMBAT_FACTION_CHANGE") then
+  end
   ------------------------------------------------------------------------
 
   if(event=="CHAT_MSG_COMBAT_XP_GAIN") then
@@ -333,7 +334,8 @@ function Reaper_OnEvent(self,event,...)
 	if(rpdb.Ding==1) then msg="Ding! Level "..narg[0] rp_GC(msg) end
   end
   ------------------------------------------------------------------------
-  if(event=="UNIT_TARGET") then end
+  if(event=="UNIT_TARGET") then
+  end
   ------------------------------------------------------------------------
   if(event=="CHAT_MSG_WHISPER") then
 	where="WHISPER"
@@ -363,7 +365,9 @@ function Reaper_OnEvent(self,event,...)
 	end
   end
   ------------------------------------------------------------------------
-  if(event=="CHAT_MSG_GUILD") then where="GUILD" end
+  if(event=="CHAT_MSG_GUILD") then
+    where="GUILD"
+  end
   if((event=="CHAT_MSG_PARTY") or
 	(event=="CHAT_MSG_PARTY_LEADER")) then
 	where="PARTY"
@@ -404,7 +408,6 @@ function rp_cd(x)
 	  local name
 	  if actiontype=="spell" then
 		name=GetSpellInfo(id)
-
 		if(name==x) then
 		  local timeLeft=math.floor((start + duration) - GetTime())
 		  y=id
@@ -582,7 +585,8 @@ function rp_uci(targx,buffcheck)
 	local spellname,s,t,tx,st,et,its,cid,ni=UnitCastingInfo(targx)
 	if spellname==nil then spellname="not casting" end
 	for bx=1,5 do
-	  local buffname,rnk,icn,cnt,dType,dur,expr,cstr,isSteal,cons,sid,canAA,isBD,v1,v2,v3=UnitBuff(targx,bx)
+	  local buffname,rnk,icn,cnt,dType,dur,expr,cstr,isSteal,cons,sid,
+            canAA,isBD,v1,v2,v3=UnitBuff(targx,bx)
 	  -- if(buffname==nil) then	buffname=" "  end
 	  if(rnk==nil) then rnk=" " end
 	  if(icn==nil) then icn=" " end
