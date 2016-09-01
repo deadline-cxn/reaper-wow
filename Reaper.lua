@@ -109,37 +109,6 @@ end
 ------------------------------------------------------------------------[Events          ]
 function Reaper_OnEvent(self,event,...)
   narg,numarg=sml_nargify(...)
-  --[[
-  local argz={}
-  argz[0], argz[1],argz[2],argz[3],argz[4],argz[5],argz[6],argz[7],argz[8],argz[9],
-  argz[10],argz[11],argz[12],argz[13],argz[14],argz[15],argz[16],argz[17],argz[18],argz[19],
-  argz[20],argz[21],argz[22],argz[23],argz[24],argz[25],argz[26],argz[27],argz[28],argz[29]=...
-  local argztxt=""
-	for ari=0,29 do if(argz[ari]~=nil) then
-	  argztxt=argztxt.." argz["..ari.."]=["..tostring(argz[ari]).."]"
-  end end
-  local narg=nil
-  narg={}
-  local numarg=0
-  if(argz[0]~=nil) then
-	for word in string.gmatch(argz[0],"%w+") do
-	  narg[numarg]=string.lower(word)
-	  if(narg[numarg]=="") then
-		narg[numarg]=nil
-		numarg=numarg-1
-	  end
-	  numarg=numarg+1
-	end
-  end
-  local otxt=" "
-  local oti=0
-  for oti=0,numarg do
-	if(narg[oti]~=nil) then
-	  otxt=otxt.." ("..oti..":"..narg[oti]..")"
-	end
-  end
-  RDPrint(argztxt)
-  ]]
   ------------------------------------------------------------------------[Save Variables  ]
   if(event=="VARIABLES_LOADED") then
 	if(not ReaperProfile) then ReaperProfile={} end
@@ -546,24 +515,44 @@ function rp_getthreat(targx)
 end
 ------------------------------------------------------------------------
 function rp_ShowRaidInfo()
+  
   local rcolor=""
-  for index=0,25 do
-	local name,rank,subgroup,level,class,fileName,zone,online,isDead,role,isML=GetRaidRosterInfo(index)
-	if(name~=nil) then
-	  --tx=UnitThreatSituation(name,targx)
-	  gltotal,glequipped=GetAverageItemLevel(name)
-	  role=UnitGroupRolesAssigned(name)
-	  if(role==nil) then role=" (NO ROLE CHOSEN) " end
-	  if(isDead==nil) then isDead=" " end
-	  if(online==1) then online=" " end
-	  if(online==0) then online=RFCC.." OFFLINE " end
-	  rcolor=RFCC
-	  if(role=="TANK") then rcolor="{skull}"  end
-	  if(role=="DAMAGER") then role="DPS." rcolor="{diamond}" end
-	  if(role=="HEALER") then role="HEAL" rcolor="{star}" end
-	  rp_RC(rcolor..role.." "..name.." "..level.." "..class.." "..zone.." GEAR:"..glequipped)
-	end
-  end
+  
+    for index=0,40 do
+        local   name,
+                rank,
+                subgroup,
+                level,
+                class,
+                fileName,
+                zone,
+                online,
+                isDead,
+                role,
+                isML = GetRaidRosterInfo(index)
+            
+        if(name~=nil) then
+    
+            -- tx=UnitThreatSituation(name,targx)
+
+            glequipped = Reaper_GetUnitGearLevel("raid"..index)
+            role       = UnitGroupRolesAssigned(name)
+
+            rcolor=RFCC
+            dead=" "
+
+            if(role==nil)       then role=" (NO ROLE CHOSEN) " end
+            if(isDead==nil)     then isDead=" " end
+            if(online==1)       then online=" " end
+            if(online==0)       then online=RFCC.." OFFLINE " end
+            if(role=="TANK")    then role="TANK" rcolor="{skull}"   end
+            if(role=="DAMAGER") then role="DPS." rcolor="{diamond}" end
+            if(role=="HEALER")  then role="HEAL" rcolor="{star}"    end
+            if(isDead==1)       then dead=" (DEAD)" end
+            RInform(rcolor..role.." "..name.." "..level.." "..class.." "..zone..dead)
+            -- .." GEAR:"..glequipped)
+        end
+    end
 end
 -----------------------------------------------------------------------
 function rp_uci(targx,buffcheck)
@@ -657,29 +646,7 @@ end
 ------------------------------------------------------[Command Handler]
 function Reaper_CommandHandler(msg)
   narg,numarg=sml_nargify(msg)
-  --[[
-  cmd=msg
-  for mesg,arg2 in string.gmatch(msg,"(.+) (.+)") do
-	msg=mesg
-	arg1=arg2
-  end
-  narg=nil
-  narg={}
-  if(msg~=nil) then
-	numarg=0
-	for word in string.gmatch(cmd,"%w+") do
-	  narg[numarg]=word
-	  if(narg[numarg]=="") then
-		narg[numarg]=nil
-		numarg=numarg-1
-	  end
-	  if(rpdb.Debug==true) then
-		RPrint(numarg.." ["..narg[numarg].."]")
-	  end
-	  numarg=numarg+1
-	end
-  end
-  ]]
+  --------------------------------------------------------------------------------
   if(msg=="show") then Reaper_Options_DisplayFrame:Show() end
   --------------------------------------------------------------------------------
   if(msg=="help") or (msg=="") or (msg=="?") then Reaper_ShowHelp() end
@@ -736,151 +703,133 @@ function Reaper_GetLink(item)
 end
 ------------------------------------------------------------------------
 function Reaper_Restack()
-  local bag,ibag,slot,islot,ammo,tbag,tslot=0
-  for bag=0,4
-	do
-	if(GetBagName(bag)~=nil) then
-	  if(string.find(GetBagName(bag),"ammo")~=nil) then ammo=bag end
-	  if(string.find(GetBagName(bag),"Ammo")~=nil) then	ammo=bag end
-	  if(string.find(GetBagName(bag),"quiver")~=nil) then ammo=bag end
-	  if(string.find(GetBagName(bag),"Quiver")~=nil) then  ammo=bag end
-	end
-  end
-  for bag=0,4
-	do
-	tbag=bag
-	for slot=1,20
-	  do
-	  tslot=slot
-	  if(ammo~=bag) then
-		iHi=GetContainerItemLink(bag,slot)
-		if(iHi==nil) then
-		  iHi="wot"
-		else
-		  link=Reaper_GetLink(iHi)
-		  if(link~=nil) then
-			local itemName,itemLink,itemRarity,itemLevelReq,itemType,itemSubType,itemStackCount=GetItemInfo(link)
-			duh,count,d2,quality,read=GetContainerItemInfo(bag,slot)
-			if(count==itemStackCount) then
-			else
-			  for ibag=0,4
-				do
-				if(ammo~=ibag) then
-				  for islot=1,30
-					do
-					if(ibag==bag) and (islot==slot) then
-					else
-					  if(GetContainerItemLink(ibag,islot)==iHi) then
-						link=Reaper_GetLink(iHi)
-						if(link~=nil) then
-						  local itemName,itemLink,itemRarity,itemLevelReq,itemMinLevel,itemType,itemSubType,itemStackCount,itemEquipLoc,itemTexture=GetItemInfo(link)
-						  duh,count,d2,quality,read=GetContainerItemInfo(ibag,islot)
-						  if(count==itemStackCount) then
-						  else
-							RPrint("Combined item "..itemName)
-							PickupContainerItem(bag,slot)
-							a_temporary_variable=3
-							if(ibag==3) then
-							  a_temporary_variable=4
-							end
-							if(a_temporary_variable==ammo) then
-							  a_temporary_variable=ammo-1
-							end
-							Reaper_GoBag(a_temporary_variable)
-							jork=Reaper_GetSlot(iHi,a_temporary_variable)
-							if(jork~=nil) then
-							  PickupContainerItem(a_temporary_variable,jork)
-							  Reaper_GoBag(ibag)
-							end
-						  end
-						end
-					  end
-					end
-				  end
-				end
-			  end
-			end
-		  end
-		end
-	  end
-	end
-  end
-  return false
+    local bag,ibag,slot,islot,ammo,tbag,tslot=0
+    for bag=0,4 do
+        tbag=bag
+        for slot=1,20 do
+            tslot=slot
+            if(ammo~=bag) then
+                iHi=GetContainerItemLink(bag,slot)
+                if(iHi==nil) then
+                    iHi="wot"
+                else
+                    link=Reaper_GetLink(iHi)
+                    if(link~=nil) then
+                        local itemName,itemLink,itemRarity,itemLevelReq,itemType,itemSubType,itemStackCount=GetItemInfo(link)
+                        local duh,count,d2,quality,read=GetContainerItemInfo(bag,slot)
+                        if(count==itemStackCount) then
+                        else
+                            for ibag=0,4 do
+                                if(ammo~=ibag) then
+                                    for islot=1,30 do
+                                        if(ibag==bag) and (islot==slot) then
+                                        else
+                                            if(GetContainerItemLink(ibag,islot)==iHi) then
+                                                link=Reaper_GetLink(iHi)
+                                                if(link~=nil) then
+                                                    local itemName,itemLink,itemRarity,itemLevelReq,itemMinLevel,itemType,itemSubType,itemStackCount,itemEquipLoc,itemTexture=GetItemInfo(link)
+                                                    duh,count,d2,quality,read=GetContainerItemInfo(ibag,islot)
+                                                    if(count==itemStackCount) then
+                                                    else
+                                                        RPrint("Combined item "..itemName)
+                                                        PickupContainerItem(bag,slot)
+                                                        a_temporary_variable=3
+                                                        if(ibag==3) then a_temporary_variable=4 end
+                                                        if(a_temporary_variable==ammo) then a_temporary_variable=ammo-1 end
+                                                        Reaper_GoBag(a_temporary_variable)
+                                                        jork=Reaper_GetSlot(iHi,a_temporary_variable)
+                                                        if(jork~=nil) then
+                                                            PickupContainerItem(a_temporary_variable,jork)
+                                                            Reaper_GoBag(ibag)
+                                                        end
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return false
 end
 ------------------------------------------------------------------------
 function Reaper_GoBag(bag)
-  if(bag==0) then PutItemInBackpack() end
-  if(bag==1) then PutItemInBag(20) end
-  if(bag==2) then PutItemInBag(21) end
-  if(bag==3) then PutItemInBag(22) end
-  if(bag==4) then PutItemInBag(23)  end
+    if(bag==0) then PutItemInBackpack() end
+    if(bag==1) then PutItemInBag(20)    end
+    if(bag==2) then PutItemInBag(21)    end
+    if(bag==3) then PutItemInBag(22)    end
+    if(bag==4) then PutItemInBag(23)    end
 end
 ------------------------------------------------------------------------
 function Reaper_GetSlot(itemZ,bag)
-  for slot=1,20
-	do
-	iHi=GetContainerItemLink(bag,slot)
-	if(iHi~=nil) then
-	  if(iHi==itemZ) then
-		return slot
-	  end
-	end
-  end
-  return nil
+    for slot=1,20 do
+        iHi=GetContainerItemLink(bag,slot)
+        if(iHi~=nil) then
+            if(iHi==itemZ) then
+                return slot
+            end
+        end
+    end
+    return nil
 end
 ------------------------------------------------------------------------
 function Reaper_GetEquippedItem(slot)
-  RPrint(slot)
-  slotId,what=GetInventorySlotInfo(slot)
-  if(slotId~=nil) then
-	return GetInventoryItemLink("player",slotId)
-  end
+    RPrint(slot)
+    slotId,what=GetInventorySlotInfo(slot)
+    if(slotId~=nil) then
+        return GetInventoryItemLink("player",slotId)
+    end
 end
 ------------------------------------------------------------------------
 function Reaper_CreateSpellListButtons()
-  local index=0
-  local createFrame=CreateFrame
-  local parent    =Reaper_SpellListFrameSF
-  local button    =createFrame("Button","Reaper_SpellListFrameSF_ItemButton1",parent, "Reaper_SpellListFrameSF_ItemButtonTemplate")
-  button:SetID(1)
-  button:SetPoint("TOPLEFT","Reaper_SpellListFrameSF","TOPLEFT",36,-75)
-  button:RegisterForClicks("LeftButtonUp","RightButtonUp")
-  for index=2,23 do
-	button=createFrame("Button","Reaper_SpellListFrameSF_ItemButton"..index,parent,"Reaper_SpellListFrameSF_ItemButtonTemplate")
-	button:SetID(index)
-	button:SetPoint("TOPLEFT","Reaper_SpellListFrameSF_ItemButton"..(index-1),"BOTTOMLEFT",0,1)
-	button:RegisterForClicks("LeftButtonUp","RightButtonUp")
-  end
+    local index=0
+    local createFrame = CreateFrame
+    local parent      = Reaper_SpellListFrameSF
+    local button      = createFrame("Button","Reaper_SpellListFrameSF_ItemButton1",parent, "Reaper_SpellListFrameSF_ItemButtonTemplate")
+    button:SetID(1)
+    button:SetPoint("TOPLEFT","Reaper_SpellListFrameSF","TOPLEFT",36,-75)
+    button:RegisterForClicks("LeftButtonUp","RightButtonUp")
+    for index=2,23 do
+        button=createFrame("Button","Reaper_SpellListFrameSF_ItemButton"..index,parent,"Reaper_SpellListFrameSF_ItemButtonTemplate")
+        button:SetID(index)
+        button:SetPoint("TOPLEFT","Reaper_SpellListFrameSF_ItemButton"..(index-1),"BOTTOMLEFT",0,1)
+        button:RegisterForClicks("LeftButtonUp","RightButtonUp")
+    end
 end
 ------------------------------------------------------------------------
 function Reaper_Populate_SpellListFrame()
-  for index=1,23 do
-	local what=getglobal("Reaper_SpellListFrameSF_ItemButton"..index)
-	if(what) then
-	  what:Hide()
-	end
-  end
-  Reaper_SpellListFrame_TitleText:SetText("Spell Link List "..Reaper_SpellListFrameSF.RealResultsSize.." items")
-  FauxScrollFrame_Update(Reaper_SpellListFrameSF,Reaper_SpellListFrameSF.RealResultsSize-1,22,16)
-  local offset=Reaper_SpellListFrameSF.offset
-  local index=1
-  local grof=0
-  for slid,astable in pairs (ReaperSpellLink) do
-	if(grof<offset) then
-	  grof=grof+1
-	else
-	  local zbutton=getglobal("Reaper_SpellListFrameSF_ItemButton"..index)
-	  if(zbutton~=nil) then
-		zwhat=getglobal("Reaper_SpellListFrameSF_ItemButton"..index.."Text")
-		zwhat:SetText(astable)
-		zwhat=getglobal("Reaper_SpellListFrameSF_ItemButton"..index.."TxtId")
-		zwhat:SetText(slid)
-		zbutton:SetScript("OnClick",(function(self) Reaper_SpellLinkButtonPressed(slid) end))
-		index=index+1
-		zbutton:Show()
-	  end
-	end
-  end
+    for index=1,23 do
+        local what=getglobal("Reaper_SpellListFrameSF_ItemButton"..index)
+        if(what) then
+            what:Hide()
+        end
+    end
+    Reaper_SpellListFrame_TitleText:SetText("Spell Link List "..Reaper_SpellListFrameSF.RealResultsSize.." items")
+    FauxScrollFrame_Update(Reaper_SpellListFrameSF,Reaper_SpellListFrameSF.RealResultsSize-1,22,16)
+    local offset=Reaper_SpellListFrameSF.offset
+    local index=1
+    local grof=0
+    for slid,astable in pairs (ReaperSpellLink) do
+        if(grof<offset) then
+            grof=grof+1
+        else
+            local zbutton=getglobal("Reaper_SpellListFrameSF_ItemButton"..index)
+            if(zbutton~=nil) then
+                zwhat=getglobal("Reaper_SpellListFrameSF_ItemButton"..index.."Text")
+                zwhat:SetText(astable)
+                zwhat=getglobal("Reaper_SpellListFrameSF_ItemButton"..index.."TxtId")
+                zwhat:SetText(slid)
+                zbutton:SetScript("OnClick",(function(self) Reaper_SpellLinkButtonPressed(slid) end))
+                index=index+1
+                zbutton:Show()
+            end
+        end
+    end
 end
 ------------------------------------------------------------------------
 function Reaper_SpellLinkGetNumItems()
@@ -892,3 +841,99 @@ end
 function Reaper_SpellLinkButtonPressed(index)
   RInform(ReaperSpellLink[index])
 end
+------------------------------------------------------------------------
+function Reaper_GetUnitGearLevel(unit)
+    local count,total,avg=0
+    for slot=1,20 do
+        iHi=GetInventoryItemLink(unit,slotId)
+        if(iHi~=nil) then
+            link=Reaper_GetLink(iHi)
+            -- local itemName,itemLink,itemRarity,itemLevelReq,itemType,itemSubType,itemStackCount=GetItemInfo(link)
+            local name,link,quality,iLevel = GetItemInfo(link)
+            if(iLevel~=nil) then
+                count=count+1
+                total=total+iLevel
+            end
+        end
+    end
+    if(count>0) then avg=total/count end
+    return avg
+end
+
+    --[[ 
+    -- gltotal,glequipped=GetAverageItemLevel(name)
+    -- slotId,what=GetInventorySlotInfo(slot)
+    -- if(slotId~=nil) then
+    -- return GetInventoryItemLink("player",slotId)
+    -- end
+        
+    slotName - Name of an inventory slot to query (string)
+    AmmoSlot - Ranged ammunition slot
+    BackSlot - Back (cloak) slot
+    Bag0Slot - Backpack slot
+    Bag1Slot - First bag slot
+    Bag2Slot - Second bag slot
+    Bag3Slot - Third bag slot
+    ChestSlot - Chest slot
+    FeetSlot - Feet (boots) slot
+    Finger0Slot - First finger (ring) slot
+    Finger1Slot - Second finger (ring) slot
+    HandsSlot - Hand (gloves) slot
+    HeadSlot - Head (helmet) slot
+    LegsSlot - Legs (pants) slot
+    MainHandSlot - Main hand weapon slot
+    NeckSlot - Necklace slot
+    RangedSlot - Ranged weapon or relic slot
+    SecondaryHandSlot - Off-hand (weapon, shield, or held item) slot
+    ShirtSlot - Shirt slot
+    ShoulderSlot - Shoulder slot
+    TabardSlot - Tabard slot
+    Trinket0Slot - First trinket slot
+    Trinket1Slot - Second trinket slot
+    WaistSlot - Waist (belt) slot
+    WristSlot - Wrist (bracers) slot
+
+    unitID:
+    
+    player - The player him/herself
+    pet - The player's pet
+    vehicle - The vehicle currently controlled by the player
+    target - The player's current target
+    focus - The player's focused unit (as can be set by typing /focus name)
+    mouseover - The unit currently under the mouse cursor (applies to both unit frames and units in the 3D world)
+    none - A valid unit token that always refers to no unit. UnitName() will return "Unknown, nil" for this UnitID. Use to force a macro to not auto self-cast (/cast [target=none] Healing Wave).
+    npc - The unit the player is currently interacting with (via the Merchant, Trainer, Bank, or similar UI); not necessarily an NPC (e.g. also used in the Trade UI)
+    party1 to party4 - Another member of the player's party. Indices match the order party member frames are displayed in the default UI (party1 is at the top, party4 at the bottom), but not consistent among party members (i.e. if Thrall and Cairne are in the same party, the player Thrall sees as party2 may not be the same player Cairne sees as party2).
+    partypet1 to partypet4 - A pet belonging to another member of the player's party
+    raid1 to raid40 - A member of the player's raid group. Unlike with the party tokens, one of the raid unit IDs will belong to the player. Indices have no relation to the arrangement of units in the default UI.
+    raidpet1 to raidpet40 - A pet belonging to a member of the player's raid group
+    boss1 to boss5 - The active bosses of the current encounter if available
+    arena1 to arena5 - A member of the opposing team in an Arena match
+    
+     -- Inventory slots
+     INVSLOT_AMMO       = 0;
+     INVSLOT_HEAD       = 1; INVSLOT_FIRST_EQUIPPED = INVSLOT_HEAD;
+     INVSLOT_NECK       = 2;
+     INVSLOT_SHOULDER   = 3;
+     INVSLOT_BODY       = 4;
+     INVSLOT_CHEST      = 5;
+     INVSLOT_WAIST      = 6;
+     INVSLOT_LEGS       = 7;
+     INVSLOT_FEET       = 8;
+     INVSLOT_WRIST      = 9;
+     INVSLOT_HAND       = 10;
+     INVSLOT_FINGER1    = 11;
+     INVSLOT_FINGER2    = 12;
+     INVSLOT_TRINKET1   = 13;
+     INVSLOT_TRINKET2   = 14;
+     INVSLOT_BACK       = 15;
+     INVSLOT_MAINHAND   = 16;
+     INVSLOT_OFFHAND    = 17;
+     INVSLOT_RANGED     = 18;
+     INVSLOT_TABARD     = 19;
+     INVSLOT_LAST_EQUIPPED = INVSLOT_TABARD;
+
+    ]]
+
+
+
