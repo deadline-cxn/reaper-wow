@@ -651,24 +651,24 @@ function Reaper_CommandHandler(msg)
   --------------------------------------------------------------------------------
   if(msg=="help") or (msg=="") or (msg=="?") then Reaper_ShowHelp() end
   --------------------------------------------------------------------------------
-  if(narg[0]=="spell") then
-	if(narg[1]~=nil) then
-	  local spellsearch=""
-	  for nzar=1,(numarg-1) do
-		spellsearch=spellsearch..tostring(narg[nzar]).." "
-	  end
-	  spellsearch=string.match(spellsearch,".*%S")
-	  RInform("Spell Link Search: ["..spellsearch.."]")
-	  for izi=1,RP_NUM_SPELLS do
-		wsp=ReaperSpellLink[izi]
-		if(wsp~=nil) then
-		  if(string.find(string.lower(wsp),string.lower(spellsearch))) then
-			RInform("["..izi.."] "..wsp)
-		  end
-		end
-	  end
-	end
-  end
+    if(narg[0]=="spell") then
+        if(narg[1]~=nil) then
+            local spellsearch=""
+            for nzar=1,(numarg-1) do
+                spellsearch=spellsearch..tostring(narg[nzar]).." "
+            end
+            spellsearch=string.match(spellsearch,".*%S")
+            RInform("Spell Link Search: ["..spellsearch.."]")
+            for izi=1,RP_NUM_SPELLS do
+                wsp=ReaperSpellLink[izi]
+                if(wsp~=nil) then
+                    if(string.find(string.lower(wsp),string.lower(spellsearch))) then
+                        RInform("["..izi.."] "..wsp)
+                    end
+                end
+            end
+        end
+    end
   --------------------------------------------------------------------------------
   if(cmd=="f1") then rp_f1() end
   --------------------------------------------------------------------------------
